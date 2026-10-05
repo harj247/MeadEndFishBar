@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { getSavedProfile, signOut } from '@/lib/auth';
 import { getVenueConfig } from '@/lib/venueConfig';
+import { usePublishedPages } from '@/hooks/useSitePages';
 import { toast } from 'sonner';
 
 interface HeaderProps {
@@ -18,6 +19,8 @@ export default function Header({ itemCount, onCartOpen, onSignInClick }: HeaderP
   const navigate = useNavigate();
   const profile = getSavedProfile();
   const venue = getVenueConfig();
+  const { pages: cmsPages } = usePublishedPages();
+  const navPages = cmsPages.filter(p => p.showInNav).sort((a, b) => a.navOrder - b.navOrder);
 
   const handleSignOut = async () => {
     await signOut();
@@ -46,9 +49,15 @@ export default function Header({ itemCount, onCartOpen, onSignInClick }: HeaderP
 
         {/* Desktop Nav */}
         <nav className="hidden md:flex items-center gap-6 text-sm text-white/70">
-          <Link to="/" className={`hover:text-[var(--brand-primary)] transition-colors ${location.pathname === '/' ? 'text-[var(--brand-primary)] font-semibold' : ''}`}>
+          <Link to="/menu" className={`hover:text-[var(--brand-primary)] transition-colors ${location.pathname === '/menu' ? 'text-[var(--brand-primary)] font-semibold' : ''}`}>
             Menu
           </Link>
+          {navPages.map(p => (
+            <Link key={p.id} to={`/p/${p.slug}`}
+              className={`hover:text-[var(--brand-primary)] transition-colors ${location.pathname === `/p/${p.slug}` ? 'text-[var(--brand-primary)] font-semibold' : ''}`}>
+              {p.navLabel || p.title}
+            </Link>
+          ))}
           {venue.phone && (
             <a href={`tel:${venue.phone.replace(/\s/g, '')}`} className="hover:text-[var(--brand-primary)] transition-colors flex items-center gap-1">
               <Phone className="w-3.5 h-3.5" /> {venue.phone}
@@ -130,9 +139,15 @@ export default function Header({ itemCount, onCartOpen, onSignInClick }: HeaderP
       {/* Mobile Menu */}
       {mobileMenuOpen && (
         <div className="md:hidden bg-[var(--brand-accent)] border-t border-white/10 px-4 py-3 flex flex-col gap-3 text-sm">
-          <Link to="/" onClick={() => setMobileMenuOpen(false)} className="text-white hover:text-[var(--brand-primary)]">
+          <Link to="/menu" onClick={() => setMobileMenuOpen(false)} className="text-white hover:text-[var(--brand-primary)]">
             Menu
           </Link>
+          {navPages.map(p => (
+            <Link key={p.id} to={`/p/${p.slug}`} onClick={() => setMobileMenuOpen(false)}
+              className="text-white hover:text-[var(--brand-primary)]">
+              {p.navLabel || p.title}
+            </Link>
+          ))}
           {venue.phone && <a href={`tel:${venue.phone.replace(/\s/g, '')}`} className="text-white hover:text-[var(--brand-primary)] flex items-center gap-1.5"><Phone className="w-3.5 h-3.5" /> {venue.phone}</a>}
           {profile ? (
             <>

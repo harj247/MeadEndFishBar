@@ -12,6 +12,7 @@ import MenuAdmin from "./pages/MenuAdmin";
 import OrderHistory from "./pages/OrderHistory";
 import KitchenLogin from "./pages/KitchenLogin";
 import NotFound from "./pages/NotFound";
+import CmsPage from "./pages/CmsPage";
 import { AuthProvider } from "@/contexts/AuthContext";
 import ProtectedRoute from "@/components/features/ProtectedRoute";
 
@@ -33,6 +34,8 @@ const App = () => (
             <Route path="/kitchen" element={<ProtectedRoute><Kitchen /></ProtectedRoute>} />
             <Route path="/menu-admin" element={<ProtectedRoute><MenuAdmin /></ProtectedRoute>} />
             <Route path="/orders" element={<OrderHistory />} />
+            {/* CMS pages — all published pages are served under /p/:slug */}
+            <Route path="/p/:slug" element={<CmsPage />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>

@@ -5,9 +5,10 @@ import {
   Upload, ImageIcon, Link2, Tag, ArrowUp, ArrowDown, Settings2,
   Globe, Clock, Building2, Truck, Navigation,
   Wand2, RotateCcw, Users, Mail, UserPlus, Shield, RefreshCw, UserX,
-  GripVertical, Receipt, AlertTriangle, WifiOff,
+  GripVertical, Receipt, AlertTriangle, WifiOff, FileText,
 } from 'lucide-react';
 import ReceiptBuilder from '@/components/features/ReceiptBuilder';
+import WebsitePages from '@/pages/WebsitePages';
 import { useAuth } from '@/contexts/AuthContext';
 import SetupWizard from '@/components/features/SetupWizard';
 import { supabase } from '@/lib/supabase';
@@ -2092,7 +2093,7 @@ function StaffManager() {
 }
 
 // ── Main menu admin page ────────────────────────────────────────────────────
-type AdminTab = 'items' | 'categories' | 'customisations' | 'settings' | 'staff';
+type AdminTab = 'items' | 'categories' | 'customisations' | 'settings' | 'staff' | 'pages';
 
 export default function MenuAdmin() {
   const navigate = useNavigate();
@@ -2255,6 +2256,7 @@ export default function MenuAdmin() {
             ['items', 'Menu Items', ''],
             ['categories', 'Categories', ''],
             ['customisations', 'Customisations', ''],
+            ['pages', 'Website', ''],
             ['settings', 'Venue Settings', ''],
             ['staff', 'Staff', ''],
           ] as const).map(([id, label]) => (
@@ -2262,6 +2264,7 @@ export default function MenuAdmin() {
               className={`flex items-center gap-1.5 px-4 py-2 rounded-lg text-sm font-semibold transition-all whitespace-nowrap ${adminTab === id ? 'bg-[#f5a623] text-[#0f1f3d]' : 'text-white/60 hover:text-white hover:bg-white/10'}`}>
               {id === 'categories' && <Tag className="w-3.5 h-3.5" />}
               {id === 'customisations' && <Settings2 className="w-3.5 h-3.5" />}
+              {id === 'pages' && <FileText className="w-3.5 h-3.5" />}
               {id === 'settings' && <Globe className="w-3.5 h-3.5" />}
               {id === 'staff' && <Users className="w-3.5 h-3.5" />}
               {label}
@@ -2589,6 +2592,9 @@ export default function MenuAdmin() {
 
         {/* ── SETTINGS TAB ── */}
         {adminTab === 'settings' && <VenueSettings />}
+
+        {/* ── WEBSITE PAGES TAB ── */}
+        {adminTab === 'pages' && <WebsitePages />}
 
         {/* ── STAFF TAB ── */}
         {adminTab === 'staff' && <StaffManager />}
